@@ -10,7 +10,7 @@ with open(here / "groq_token.txt") as f:
 chat_file_path = sys.argv[1]
 
 with open(chat_file_path, encoding="utf-8") as f:
-    chat_lines = f.readlines()
+    chat_lines = f.read().split("\n")
 
 chat_messages = []
 new_lines = []
