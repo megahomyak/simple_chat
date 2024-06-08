@@ -18,13 +18,13 @@ for line in chat_lines:
         line = line[5:] # Removing the "USER " part
         chat_messages.append({
             "role": "user",
-            "message": line,
+            "content": line,
         })
     elif line.startswith("ASSISTANT "):
         line = line[10:] # Removing the "ASSISTANT " part
         chat_messages.append({
             "role": "assistant",
-            "message": line,
+            "content": line,
         })
     elif line.startswith(">"):
         line = line[1:] # Removing the ">" character
@@ -36,7 +36,7 @@ completion = groq.chat.completions.create(
 )
 
 response_lines = completion.choices[0].message.content.split("\n")
-with open(chat_file_path, encoding="utf-8") as f:
+with open(chat_file_path, "a", encoding="utf-8") as f:
     f.write(f"\nASSISTANT {response_lines[0]}")
     for line in response_lines[1:]:
         f.write(f"\n>{line}")
