@@ -29,7 +29,7 @@ for line in chat_lines:
             "content": line,
         })
     else:
-        chat_messages[-1]["message"] += "\n" + line
+        chat_messages[-1]["content"] += "\n" + line
 
 completion = groq.chat.completions.create(
     model="llama3-70b-8192",
