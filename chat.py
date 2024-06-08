@@ -30,8 +30,7 @@ for line in chat_lines:
             "role": "assistant",
             "content": line,
         })
-    elif line.startswith(">"):
-        line = line[1:] # Removing the ">" character
+    else:
         chat_messages[-1]["message"] += "\n" + line
 
 completion = groq.chat.completions.create(
@@ -42,7 +41,7 @@ completion = groq.chat.completions.create(
 response_lines = completion.choices[0].message.content.split("\n")
 new_lines.append(f"ASSISTANT {response_lines[0]}")
 for line in response_lines[1:]:
-    new_lines.append(f">{line}")
+    new_lines.append(line)
 
 with open(chat_file_path, "w", encoding="utf-8") as f:
     for line in new_lines:

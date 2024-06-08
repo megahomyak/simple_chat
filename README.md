@@ -12,7 +12,7 @@ Then, run `python chat.py textfile`, where `textfile` is a path to a text file w
 
 ## Chat file syntax
 
-Each message starts with "ASSISTANT" or "USER" on a new line, then there is one space, then the message contents begin. Contents may be multiline: to make the next line part of message contents, begin it with ">" (no whitespace needed: it will be parsed as one with message contents, so don't add a whitespace for a pretty look)
+Each message starts with "ASSISTANT" or "USER" on a new line, then there is one space, then the message contents begin. Contents may be multiline (no escape sequences for "USER" or "ASSISTANT" at new lines right now, sorry)
 
 ### Example
 
@@ -20,7 +20,7 @@ Each message starts with "ASSISTANT" or "USER" on a new line, then there is one 
 USER Hello!
 ASSISTANT Hello! How can I assist you today?
 USER Today I want to write multiline
->
->text!
+
+text!
 ASSISTANT That's great! Is there anything I can help with?
 ```
