@@ -15,8 +15,6 @@ with open(chat_file_path, encoding="utf-8") as f:
 chat_messages = []
 new_lines = []
 for line in chat_lines:
-    if line == "":
-        continue
     new_lines.append(line)
     if line.startswith("USER "):
         line = line[5:] # Removing the "USER " part
