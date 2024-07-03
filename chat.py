@@ -16,20 +16,27 @@ chat_messages = []
 new_lines = []
 for line in chat_lines:
     new_lines.append(line)
+    role = None
     if line.startswith("USER "):
         line = line[5:] # Removing the "USER " part
+        role = "user"
         chat_messages.append({
             "role": "user",
             "content": line,
         })
     elif line.startswith("ASSISTANT "):
         line = line[10:] # Removing the "ASSISTANT " part
-        chat_messages.append({
-            "role": "assistant",
-            "content": line,
-        })
+        role = "assistant"
+    elif line.startswith("SYSTEM "):
+        line = line[7:] # Removing the "ASSISTANT " part
+        role = "system"
     else:
         chat_messages[-1]["content"] += "\n" + line
+    if role:
+        chat_messages.append({
+            "role": role,
+            "content": line,
+        })
 
 completion = groq.chat.completions.create(
     model="llama3-70b-8192",
