@@ -12,6 +12,8 @@ chat_file_path = sys.argv[1]
 with open(chat_file_path, encoding="utf-8") as f:
     chat_lines = f.read().rstrip().split("\n")
 
+temperature = 0
+
 chat_messages = []
 new_lines = []
 for line in chat_lines:
@@ -25,10 +27,13 @@ for line in chat_lines:
             "content": line,
         })
     elif line.startswith("ASSISTANT "):
-        line = line[10:] # Removing the "ASSISTANT " part
+        line = line[len("ASSISTANT "):]
         role = "assistant"
+    elif line.startswith("TEMPERATURE "):
+        temperature = float(line[len("TEMPERATURE "):])
+        continue
     elif line.startswith("SYSTEM "):
-        line = line[7:] # Removing the "ASSISTANT " part
+        line = line[len("SYSTEM "):]
         role = "system"
     else:
         chat_messages[-1]["content"] += "\n" + line
@@ -41,6 +46,7 @@ for line in chat_lines:
 completion = groq.chat.completions.create(
     model="llama3-70b-8192",
     messages=chat_messages,
+    temperature=temperature,
 )
 
 response_lines = completion.choices[0].message.content.split("\n")
