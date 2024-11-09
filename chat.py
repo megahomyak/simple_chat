@@ -17,6 +17,7 @@ with open(chat_file_path, encoding="utf-8") as f:
     chat_lines = f.read().rstrip().split("\n")
 
 temperature = 0
+model = "llama3-70b-8192"
 
 chat_messages = []
 new_lines = []
@@ -35,6 +36,9 @@ for line in chat_lines:
         role = "assistant"
     elif line.startswith("TEMPERATURE "):
         temperature = float(line[len("TEMPERATURE "):])
+        continue
+    elif line.startswith("MODEL "):
+        model = line[len("MODEL "):]
         continue
     elif line.startswith("SYSTEM "):
         line = line[len("SYSTEM "):]
@@ -65,7 +69,7 @@ def is_rejection(text):
 
 while True:
     completion = groq.chat.completions.create(
-        model="llama3-70b-8192",
+        model=model,
         messages=chat_messages,
         temperature=temperature,
     )
