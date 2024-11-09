@@ -8,6 +8,10 @@ with open(here / "groq_token.txt") as f:
     groq = Groq(api_key=f.read().strip())
 
 chat_file_path = sys.argv[1]
+try:
+    check_rejections = sys.argv[2] == "y"
+except IndexError:
+    check_rejections = False
 
 with open(chat_file_path, encoding="utf-8") as f:
     chat_lines = f.read().rstrip().split("\n")
@@ -43,13 +47,33 @@ for line in chat_lines:
             "content": line,
         })
 
-completion = groq.chat.completions.create(
-    model="llama3-70b-8192",
-    messages=chat_messages,
-    temperature=temperature,
-)
+def is_rejection(text):
+    completion = groq.chat.completions.create(
+        model="llama3-70b-8192",
+        messages=[
+            {
+                "role": "system",
+                "content": f'"""\n{text}\n"""\n\nDoes the message in triple quotes look like a rejection to create a response? Respond with "YES" or "NO" (without quotes)'
+            }
+        ],
+    )
+    response = completion.choices[0].message.content
+    if response == "YES":
+        print(f"REJECTED: {text}")
+        return True
+    return False
 
-response_lines = completion.choices[0].message.content.split("\n")
+while True:
+    completion = groq.chat.completions.create(
+        model="llama3-70b-8192",
+        messages=chat_messages,
+        temperature=temperature,
+    )
+    response = completion.choices[0].message.content
+    if not is_rejection(response):
+        break
+
+response_lines = response.split("\n")
 new_lines.append(f"ASSISTANT {response_lines[0]}")
 for line in response_lines[1:]:
     new_lines.append(line)
