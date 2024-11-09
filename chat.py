@@ -74,6 +74,8 @@ while True:
         temperature=temperature,
     )
     response = completion.choices[0].message.content
+    if not check_rejections:
+        break
     if not is_rejection(response):
         break
 
