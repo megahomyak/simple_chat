@@ -17,7 +17,7 @@ with open(chat_file_path, encoding="utf-8") as f:
     chat_lines = f.read().rstrip().split("\n")
 
 temperature = 0
-model = "llama3-70b-8192"
+model = "llama-3.3-70b-versatile"
 
 chat_messages = []
 new_lines = []
